@@ -16,7 +16,8 @@
 #include <algorithm>
 #include "TargetComponent.h"
 
-HUD::HUD(Game *game) : UIScreen(game), mRadarRange(2000.0f), mRadarRadius(92.0f), mTargetEnemy(false)
+HUD::HUD(Game *game) : UIScreen(game), mRadarRange(2000.0f),
+											 mRadarRadius(92.0f), mTargetEnemy(false)
 {
 	Renderer *r = mGame->GetRenderer();
 	mHealthBar = r->GetTexture("Assets/HealthBar.png");
