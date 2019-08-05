@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -19,11 +19,8 @@
 #include <GL/glew.h>
 #include "SkeletalMeshComponent.h"
 
-Renderer::Renderer(Game* game)
-	:mGame(game)
-	,mSpriteShader(nullptr)
-	,mMeshShader(nullptr)
-	,mSkinnedShader(nullptr)
+Renderer::Renderer(Game *game) : mGame(game), mSpriteShader(nullptr),
+																 mMeshShader(nullptr), mSkinnedShader(nullptr)
 {
 }
 
@@ -54,7 +51,7 @@ bool Renderer::Initialize(float screenWidth, float screenHeight)
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	mWindow = SDL_CreateWindow("Game Programming in C++ (Chapter 12)", 100, 100,
-		static_cast<int>(mScreenWidth), static_cast<int>(mScreenHeight), SDL_WINDOW_OPENGL);
+														 static_cast<int>(mScreenWidth), static_cast<int>(mScreenHeight), SDL_WINDOW_OPENGL);
 	if (!mWindow)
 	{
 		SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -176,7 +173,7 @@ void Renderer::Draw()
 			sprite->Draw(mSpriteShader);
 		}
 	}
-	
+
 	// Draw any UI screens
 	for (auto ui : mGame->GetUIStack())
 	{
@@ -187,15 +184,15 @@ void Renderer::Draw()
 	SDL_GL_SwapWindow(mWindow);
 }
 
-void Renderer::AddSprite(SpriteComponent* sprite)
+void Renderer::AddSprite(SpriteComponent *sprite)
 {
 	// Find the insertion point in the sorted vector
 	// (The first element with a higher draw order than me)
 	int myDrawOrder = sprite->GetDrawOrder();
 	auto iter = mSprites.begin();
 	for (;
-		iter != mSprites.end();
-		++iter)
+			 iter != mSprites.end();
+			 ++iter)
 	{
 		if (myDrawOrder < (*iter)->GetDrawOrder())
 		{
@@ -207,17 +204,17 @@ void Renderer::AddSprite(SpriteComponent* sprite)
 	mSprites.insert(iter, sprite);
 }
 
-void Renderer::RemoveSprite(SpriteComponent* sprite)
+void Renderer::RemoveSprite(SpriteComponent *sprite)
 {
 	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
 	mSprites.erase(iter);
 }
 
-void Renderer::AddMeshComp(MeshComponent* mesh)
+void Renderer::AddMeshComp(MeshComponent *mesh)
 {
 	if (mesh->GetIsSkeletal())
 	{
-		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		SkeletalMeshComponent *sk = static_cast<SkeletalMeshComponent *>(mesh);
 		mSkeletalMeshes.emplace_back(sk);
 	}
 	else
@@ -226,11 +223,11 @@ void Renderer::AddMeshComp(MeshComponent* mesh)
 	}
 }
 
-void Renderer::RemoveMeshComp(MeshComponent* mesh)
+void Renderer::RemoveMeshComp(MeshComponent *mesh)
 {
 	if (mesh->GetIsSkeletal())
 	{
-		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		SkeletalMeshComponent *sk = static_cast<SkeletalMeshComponent *>(mesh);
 		auto iter = std::find(mSkeletalMeshes.begin(), mSkeletalMeshes.end(), sk);
 		mSkeletalMeshes.erase(iter);
 	}
@@ -241,9 +238,9 @@ void Renderer::RemoveMeshComp(MeshComponent* mesh)
 	}
 }
 
-Texture* Renderer::GetTexture(const std::string& fileName)
+Texture *Renderer::GetTexture(const std::string &fileName)
 {
-	Texture* tex = nullptr;
+	Texture *tex = nullptr;
 	auto iter = mTextures.find(fileName);
 	if (iter != mTextures.end())
 	{
@@ -265,9 +262,9 @@ Texture* Renderer::GetTexture(const std::string& fileName)
 	return tex;
 }
 
-Mesh* Renderer::GetMesh(const std::string & fileName)
+Mesh *Renderer::GetMesh(const std::string &fileName)
 {
-	Mesh* m = nullptr;
+	Mesh *m = nullptr;
 	auto iter = mMeshes.find(fileName);
 	if (iter != mMeshes.end())
 	{
@@ -314,7 +311,7 @@ bool Renderer::LoadShaders()
 	// Set the view-projection matrix
 	mView = Matrix4::CreateLookAt(Vector3::Zero, Vector3::UnitX, Vector3::UnitZ);
 	mProjection = Matrix4::CreatePerspectiveFOV(Math::ToRadians(70.0f),
-		mScreenWidth, mScreenHeight, 10.0f, 10000.0f);
+																							mScreenWidth, mScreenHeight, 10.0f, 10000.0f);
 	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
 	// Create skinned shader
@@ -328,7 +325,7 @@ bool Renderer::LoadShaders()
 	// Set the view-projection matrix
 	mView = Matrix4::CreateLookAt(Vector3::Zero, Vector3::UnitX, Vector3::UnitZ);
 	mProjection = Matrix4::CreatePerspectiveFOV(Math::ToRadians(70.0f),
-		mScreenWidth, mScreenHeight, 10.0f, 10000.0f);
+																							mScreenWidth, mScreenHeight, 10.0f, 10000.0f);
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
 	return true;
 }
@@ -336,21 +333,20 @@ bool Renderer::LoadShaders()
 void Renderer::CreateSpriteVerts()
 {
 	float vertices[] = {
-		-0.5f, 0.5f, 0.f, 0.f, 0.f, 0.0f, 0.f, 0.f, // top left
-		0.5f, 0.5f, 0.f, 0.f, 0.f, 0.0f, 1.f, 0.f, // top right
-		0.5f,-0.5f, 0.f, 0.f, 0.f, 0.0f, 1.f, 1.f, // bottom right
-		-0.5f,-0.5f, 0.f, 0.f, 0.f, 0.0f, 0.f, 1.f  // bottom left
+			-0.5f, 0.5f, 0.f, 0.f, 0.f, 0.0f, 0.f, 0.f, // top left
+			0.5f, 0.5f, 0.f, 0.f, 0.f, 0.0f, 1.f, 0.f,	// top right
+			0.5f, -0.5f, 0.f, 0.f, 0.f, 0.0f, 1.f, 1.f, // bottom right
+			-0.5f, -0.5f, 0.f, 0.f, 0.f, 0.0f, 0.f, 1.f // bottom left
 	};
 
 	unsigned int indices[] = {
-		0, 1, 2,
-		2, 3, 0
-	};
+			0, 1, 2,
+			2, 3, 0};
 
 	mSpriteVerts = new VertexArray(vertices, 4, VertexArray::PosNormTex, indices, 6);
 }
 
-void Renderer::SetLightUniforms(Shader* shader)
+void Renderer::SetLightUniforms(Shader *shader)
 {
 	// Camera position is from inverted view
 	Matrix4 invView = mView;
@@ -360,19 +356,19 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetVectorUniform("uAmbientLight", mAmbientLight);
 	// Directional light
 	shader->SetVectorUniform("uDirLight.mDirection",
-		mDirLight.mDirection);
+													 mDirLight.mDirection);
 	shader->SetVectorUniform("uDirLight.mDiffuseColor",
-		mDirLight.mDiffuseColor);
+													 mDirLight.mDiffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor",
-		mDirLight.mSpecColor);
+													 mDirLight.mSpecColor);
 }
 
-Vector3 Renderer::Unproject(const Vector3& screenPoint) const
+Vector3 Renderer::Unproject(const Vector3 &screenPoint) const
 {
 	// Convert screenPoint to device coordinates (between -1 and +1)
 	Vector3 deviceCoord = screenPoint;
-	deviceCoord.x /= (mScreenWidth) * 0.5f;
-	deviceCoord.y /= (mScreenHeight) * 0.5f;
+	deviceCoord.x /= (mScreenWidth)*0.5f;
+	deviceCoord.y /= (mScreenHeight)*0.5f;
 
 	// Transform vector by unprojection matrix
 	Matrix4 unprojection = mView * mProjection;
@@ -380,7 +376,7 @@ Vector3 Renderer::Unproject(const Vector3& screenPoint) const
 	return Vector3::TransformWithPerspDiv(deviceCoord, unprojection);
 }
 
-void Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
+void Renderer::GetScreenDirection(Vector3 &outStart, Vector3 &outDir) const
 {
 	// Get start point (in center of screen on near plane)
 	Vector3 screenPoint(0.0f, 0.0f, 0.0f);

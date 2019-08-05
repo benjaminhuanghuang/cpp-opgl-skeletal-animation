@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -10,15 +10,12 @@
 #include "AudioSystem.h"
 #include <fmod_studio.hpp>
 
-SoundEvent::SoundEvent(class AudioSystem* system, unsigned int id)
-	:mSystem(system)
-	,mID(id)
+SoundEvent::SoundEvent(class AudioSystem *system, unsigned int id) : mSystem(system), mID(id)
 {
 }
 
 SoundEvent::SoundEvent()
-	:mSystem(nullptr)
-	,mID(0)
+		: mSystem(nullptr), mID(0)
 {
 }
 
@@ -41,9 +38,7 @@ void SoundEvent::Stop(bool allowFadeOut /* true */)
 	auto event = mSystem ? mSystem->GetEventInstance(mID) : nullptr;
 	if (event)
 	{
-		FMOD_STUDIO_STOP_MODE mode = allowFadeOut ?
-			FMOD_STUDIO_STOP_ALLOWFADEOUT :
-			FMOD_STUDIO_STOP_IMMEDIATE;
+		FMOD_STUDIO_STOP_MODE mode = allowFadeOut ? FMOD_STUDIO_STOP_ALLOWFADEOUT : FMOD_STUDIO_STOP_IMMEDIATE;
 		event->stop(mode);
 	}
 }
@@ -75,7 +70,7 @@ void SoundEvent::SetPitch(float value)
 	}
 }
 
-void SoundEvent::SetParameter(const std::string& name, float value)
+void SoundEvent::SetParameter(const std::string &name, float value)
 {
 	auto event = mSystem ? mSystem->GetEventInstance(mID) : nullptr;
 	if (event)
@@ -117,7 +112,7 @@ float SoundEvent::GetPitch() const
 	return retVal;
 }
 
-float SoundEvent::GetParameter(const std::string& name)
+float SoundEvent::GetParameter(const std::string &name)
 {
 	float retVal = 0.0f;
 	auto event = mSystem ? mSystem->GetEventInstance(mID) : nullptr;
@@ -135,7 +130,7 @@ bool SoundEvent::Is3D() const
 	if (event)
 	{
 		// Get the event description
-		FMOD::Studio::EventDescription* ed = nullptr;
+		FMOD::Studio::EventDescription *ed = nullptr;
 		event->getDescription(&ed);
 		if (ed)
 		{
@@ -147,19 +142,19 @@ bool SoundEvent::Is3D() const
 
 namespace
 {
-	FMOD_VECTOR VecToFMOD(const Vector3& in)
-	{
-		// Convert from our coordinates (+x forward, +y right, +z up)
-		// to FMOD (+z forward, +x right, +y up)
-		FMOD_VECTOR v;
-		v.x = in.y;
-		v.y = in.z;
-		v.z = in.x;
-		return v;
-	}
+FMOD_VECTOR VecToFMOD(const Vector3 &in)
+{
+	// Convert from our coordinates (+x forward, +y right, +z up)
+	// to FMOD (+z forward, +x right, +y up)
+	FMOD_VECTOR v;
+	v.x = in.y;
+	v.y = in.z;
+	v.z = in.x;
+	return v;
 }
+} // namespace
 
-void SoundEvent::Set3DAttributes(const Matrix4& worldTrans)
+void SoundEvent::Set3DAttributes(const Matrix4 &worldTrans)
 {
 	auto event = mSystem ? mSystem->GetEventInstance(mID) : nullptr;
 	if (event)
@@ -172,7 +167,7 @@ void SoundEvent::Set3DAttributes(const Matrix4& worldTrans)
 		// Third row is up
 		attr.up = VecToFMOD(worldTrans.GetZAxis());
 		// Set velocity to zero (fix if using Doppler effect)
-		attr.velocity = { 0.0f, 0.0f, 0.0f };
+		attr.velocity = {0.0f, 0.0f, 0.0f};
 		event->set3DAttributes(&attr);
 	}
 }

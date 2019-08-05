@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -14,17 +14,15 @@
 #include "Mesh.h"
 #include "TargetComponent.h"
 
-TargetActor::TargetActor(Game* game)
-	:Actor(game)
+TargetActor::TargetActor(Game *game) : Actor(game)
 {
 	//SetScale(10.0f);
 	SetRotation(Quaternion(Vector3::UnitZ, Math::Pi));
-	MeshComponent* mc = new MeshComponent(this);
-	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Target.gpmesh");
+	MeshComponent *mc = new MeshComponent(this);
+	Mesh *mesh = GetGame()->GetRenderer()->GetMesh("Assets/Target.gpmesh");
 	mc->SetMesh(mesh);
 	// Add collision box
-	BoxComponent* bc = new BoxComponent(this);
+	BoxComponent *bc = new BoxComponent(this);
 	bc->SetObjectBox(mesh->GetBox());
 	new TargetComponent(this);
-
 }
