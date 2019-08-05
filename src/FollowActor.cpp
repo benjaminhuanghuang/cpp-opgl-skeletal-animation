@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -13,9 +13,7 @@
 #include "FollowCamera.h"
 #include "MoveComponent.h"
 
-FollowActor::FollowActor(Game* game)
-	:Actor(game)
-	,mMoving(false)
+FollowActor::FollowActor(Game *game) : Actor(game), mMoving(false)
 {
 	mMeshComp = new SkeletalMeshComponent(this);
 	mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/CatWarrior.gpmesh"));
@@ -28,7 +26,7 @@ FollowActor::FollowActor(Game* game)
 	mCameraComp->SnapToIdeal();
 }
 
-void FollowActor::ActorInput(const uint8_t* keys)
+void FollowActor::ActorInput(const uint8_t *keys)
 {
 	float forwardSpeed = 0.0f;
 	float angularSpeed = 0.0f;
